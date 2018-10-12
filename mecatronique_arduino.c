@@ -28,14 +28,15 @@ void setup()
 	pinMode(echo1, INPUT);
 	pinMode(echo2, INPUT);
 	pinMode(capteur_temp, INPUT);
-	digitalWrite(echo, LOW);
+	digitalWrite(echo1, LOW);
+	digitalWrite(echo2, LOW);
 	Serial.begin(9600);
 }
 
 void loop()
 {
-	temperature = conversion0(capteur_temp);
-	vitesse = (float)(0.0017*temperature0*temperature0 - 0.1208*temperature0 + 185.97);
+	temperature = conversion(capteur_temp);
+	vitesse = (float)(0.0017*temperature*temperature - 0.1208*temperature + 185.97);
 
 	temps1 = obtenir_temps(echo1, trigger1);
 	distance1 = (float)(temps1 / 2.0 * (vitesse / 1000.0));
@@ -55,7 +56,7 @@ void loop()
 	delay(2000);
 	if (distance1 <= 4/100.0)
 	{
-		if (distance2 - difflongueur < 3/100.0)
+		if (distance2 - diff_longueur < 3/100.0)
 		{
 			digitalWrite(l293d_1a, HIGH);
 			digitalWrite(l293d_2a, LOW);
@@ -68,7 +69,7 @@ void loop()
 	} 
 	else if (distance1 <= 1/10.0) 
 	{
-		analogWrite(l293d_2a, (int)(255.0/7.0 * distance - 765.0/7.0));
+		analogWrite(l293d_2a, (int)(255.0/7.0 * distance1 - 765.0/7.0));
 	} 
 	else 
 	{
@@ -77,9 +78,9 @@ void loop()
 	}
 }
 
-float conversion(float valeur_capteur_temp)
+float conversion(float capteur_temp)
 {
-	valeur_capteur_temp = analogRead(capteurtemp);
+	valeur_capteur_temp = analogRead(capteur_temp);
 	float temperature = (float)(valeur_capteur_temp * 1100.0/1024-500) / 10; //temperature en tension
 	return temperature;
 }
