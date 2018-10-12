@@ -64,7 +64,7 @@ void loop()
 		}
 		else
 		{
-			analogWrite(l293d_2a, (int)(255.0/7.0 * (distance2 - difflongueur) - 765.0/7.0));
+			analogWrite(l293d_2a, (int)(255.0/7.0 * (distance2 - diff_longueur) - 765.0/7.0));
 		}
 	} 
 	else if (distance1 <= 1/10.0) 
@@ -80,7 +80,7 @@ void loop()
 
 float conversion(float capteur_temp)
 {
-	valeur_capteur_temp = analogRead(capteur_temp);
+	int valeur_capteur_temp = analogRead(capteur_temp);
 	float temperature = (float)(valeur_capteur_temp * 1100.0/1024-500) / 10; //temperature en tension
 	return temperature;
 }
