@@ -6,7 +6,7 @@ int trigger2 = 5; // Pin du trigger du deuxieme capteur
 int echo2 = 6; // Pin du echo du deuxieme capteur
 int l293d_enable = 0;
 int l293d_1a = 2;
-int l293d_2a = 2;
+int l293d_2a = 3;
 int diff_longueur = 3; // Difference de longueur entre les deux capteurs
 int distance1 = 0;
 int distance2 = 0;
@@ -53,6 +53,28 @@ void loop()
 	Serial.println(" cm");
 
 	delay(2000);
+	if (distance1 <= 4/100.0)
+	{
+		if (distance2 - difflongueur < 3/100.0)
+		{
+			digitalWrite(l293d_1a, HIGH);
+			digitalWrite(l293d_2a, LOW);
+			delay(1000);
+		}
+		else
+		{
+			analogWrite(l293d_2a, (int)(255.0/7.0 * (distance2 - difflongueur) - 765.0/7.0));
+		}
+	} 
+	else if (distance1 <= 1/10.0) 
+	{
+		analogWrite(l293d_2a, (int)(255.0/7.0 * distance - 765.0/7.0));
+	} 
+	else 
+	{
+		digitalWrite(l293d_1a, LOW);
+		digitalWrite(l293d_2a, HIGH);
+	}
 }
 
 float conversion(float valeur_capteur_temp)
