@@ -36,7 +36,7 @@ void setup()
 void loop()
 {
 	temperature = conversion(capteur_temp);
-	vitesse = (float)(0.0017*temperature*temperature - 0.1208*temperature + 185.97);
+	vitesse = (float)(0.0006*temperature*temperature - 0.6069*temperature + 331.52);
 
 	temps1 = obtenir_temps(echo1, trigger1);
 	distance1 = (float)(temps1 / 2.0 * (vitesse / 1000.0));
