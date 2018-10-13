@@ -28,8 +28,6 @@ void setup()
 	pinMode(echo1, INPUT);
 	pinMode(echo2, INPUT);
 	pinMode(capteur_temp, INPUT);
-	digitalWrite(echo1, LOW);
-	digitalWrite(echo2, LOW);
 	Serial.begin(9600);
 }
 
@@ -48,8 +46,12 @@ void loop()
 	Serial.print(temperature);
 	Serial.println("degres C");
 
+	Serial.print(temps1);
+	Serial.println(" microseconds");
 	Serial.print(distance1/100.0);
 	Serial.println(" cm");
+	Serial.print(temps2);
+	Serial.println(" microseconds");
 	Serial.print(distance2/100.0);
 	Serial.println(" cm");
 
