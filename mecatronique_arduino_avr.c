@@ -13,7 +13,7 @@ float temps1 = 0.0;
 float temps2 = 0.0;
 
 // Code de M. Perreti
-uint16_t ReadADC(uint8_t __channel){ 
+uint16_t analog_read(uint8_t __channel){ 
 	/*
 	 * Selection de l'entrée analogique à convertir.
 	 * On met les 4 bits de poids faible à 0 pour les recharger
@@ -39,8 +39,62 @@ uint16_t ReadADC(uint8_t __channel){
 	return(ADC); 
 }
 
+// Code de la librairie Arduino modifié
+void analog_write(uint8_t pin, int val)
+{
+	if (val == 0)
+	{
+		digitalWrite(pin, LOW);
+	}
+	else if (val == 255)
+	{
+		digitalWrite(pin, HIGH);
+	}
+	else
+	{
+		switch(digitalPinToTimer(pin))
+		{
+			case TIMER0A:
+				// connect pwm to pin on timer 0, channel A
+				sbi(TCCR0A, COM0A1);
+				OCR0A = val; // set pwm duty
+				break;
+
+			case TIMER0B:
+				// connect pwm to pin on timer 0, channel B
+				sbi(TCCR0A, COM0B1);
+				OCR0B = val; // set pwm duty
+				break;
+
+			case TIMER1A:
+				// connect pwm to pin on timer 1, channel A
+				sbi(TCCR1A, COM1A1);
+				OCR1A = val; // set pwm duty
+				break;
+
+			case TIMER1B:
+				// connect pwm to pin on timer 1, channel B
+				sbi(TCCR1A, COM1B1);
+				OCR1B = val; // set pwm duty
+				break;
+
+			case TIMER2A:
+				// connect pwm to pin on timer 2, channel A
+				sbi(TCCR2A, COM2A1);
+				OCR2A = val; // set pwm duty
+				break;
+
+			case TIMER2B:
+				// connect pwm to pin on timer 2, channel B
+				sbi(TCCR2A, COM2B1);
+				OCR2B = val; // set pwm duty
+				break;
+		}
+	}
+}
+
 float conversion(uint8_t pin) {
-	uint16_t valeur = ReadADC(pin);
+	uint16_t valeur = analog_read(pin);
 	return (valeur * 0.107422) - 50;
 }
 
@@ -93,7 +147,7 @@ int main(void) {
 
 		Serial.println("Temperature mesuree: ");
 		Serial.print(temperature)
-		Serial.println("degres C");
+			Serial.println("degres C");
 
 		Serial.print(temps1);
 		Serial.println("microseconds");
@@ -113,8 +167,10 @@ int main(void) {
 				// On envoie un signal LOW à PB2
 				_delay_ms(1000);
 			} else {
+				analog_write(3, (int)(255.0/7.0 * (distance2 - diff_longueur) - 765.0/7.0));
 			}
 		} else if (distance1 <= 1/10.0) {
+			analog_write(3, (int)(255.0/7.0 * distance1 - 765.0/7.0));
 		} else {
 			PORTD &= ~(1 << PIN2);
 			// On envoie un signal LOW à PD2
